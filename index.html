@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Dual X3D Viewer Test</title>
+
+<!-- X3DOM -->
+<script src="https://www.x3dom.org/download/x3dom.js"></script>
+<link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css" />
+
+<!-- X_ITE -->
+<script type="module">
+  import X3D from "./node_modules/x_ite/dist/x_ite.min.mjs";
+  X3D();
+</script>
+
+<style>
+  body { margin: 0; background: #111; color: #fff; }
+  .container { display: flex; height: 100vh; }
+  .viewer { flex: 1; position: relative; }
+  .viewer + .viewer { border-left: 1px solid #333; }
+  .label {
+    position: absolute;
+    top: 6px; left: 6px;
+    z-index: 10;
+    background: rgba(0,0,0,0.6);
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  x3d, x3d-canvas { width: 100%; height: 100%; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LEFT: X3DOM (inline OK) -->
+  <div class="viewer">
+    <div class="label">X3DOM</div>
+    <x3d>
+      <scene>
+        <inline url="scene.x3d"></inline>
+      </scene>
+    </x3d>
+  </div>
+
+  <!-- RIGHT: X_ITE (src 필수) -->
+  <div class="viewer">
+    <div class="label">X_ITE</div>
+    <x3d-canvas src="scene.x3d"></x3d-canvas>
+  </div>
+
+</div>
+
+</body>
+</html>
