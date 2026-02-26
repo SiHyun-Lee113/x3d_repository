@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN"
+  "https://www.web3d.org/specifications/x3d-3.3.dtd">
+
+<X3D profile="Immersive" version="3.3"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+     xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-3.3.xsd">
+
+  <head>
+    <meta name="title" content="Earth Rotation Event Animation Example"/>
+    <meta name="description"
+          content="Single coordinate system rotation driven by TimeSensor and OrientationInterpolator with manual trigger"/>
+    <meta name="creator" content="X3D Event Pipeline Example"/>
+  </head>
+
+  <Scene>
+
+    <!-- ====================================================== -->
+    <!-- Viewpoint (fixed, explicit, non-animated)              -->
+    <!-- ====================================================== -->
+    <Viewpoint
+        description="Hello, world"
+        position="0 0 -8"
+        orientation="0 1 0 3.14159"/>
+
+    <!-- ====================================================== -->
+    <!-- Interaction trigger                                    -->
+    <!-- ====================================================== -->
+    <TouchSensor
+        DEF="ClickTriggerTouchSensor"
+        description="Click to start animation"/>
+
+    <!-- ====================================================== -->
+    <!-- Time control                                           -->
+    <!-- ====================================================== -->
+    <TimeSensor
+        DEF="OrbitalTimeInterval"
+        cycleInterval="12"
+        loop="false"/>
+
+    <!-- ====================================================== -->
+    <!-- Rotation interpolator                                  -->
+    <!-- ====================================================== -->
+    <OrientationInterpolator
+        DEF="SpinThoseThings"
+        key="0.00 0.25 0.50 0.75 1.00"
+        keyValue="
+          0 1 0 0,
+          0 1 0 1.57079,
+          0 1 0 3.14159,
+          0 1 0 4.7123889,
+          0 1 0 6.2831852"/>
+
+    <!-- ====================================================== -->
+    <!-- Central coordinate system                              -->
+    <!-- ====================================================== -->
+    <Transform DEF="EarthCoordinateSystem">
+
+      <!-- ================= Earth Sphere ================= -->
+      <Shape>
+        <Appearance>
+          <ImageTexture url='
+            "../../earth-topo.png"
+            "../../earth-topo.gif"
+            "../../earth-topo-small.gif"
+            "https://www.web3d.org/x3d/content/examples/X3dForWebAuthors/earth-topo.png"
+            "https://www.web3d.org/x3d/content/examples/X3dForWebAuthors/earth-topo.gif"
+            "https://www.web3d.org/x3d/content/examples/X3dForWebAuthors/earth-topo-small.gif"
+          '/>
+        </Appearance>
+        <Sphere/>
+      </Shape>
+
+      <!-- ================= Text Satellite ================= -->
+      <Transform
+          DEF="SimpleGeoStationarySatellite"
+          translation="0 0 5"
+          rotation="1 0 0 0.3"
+          scale="0.1 0.3 0.1">
+
+        <Shape>
+          <Appearance>
+            <Material
+                diffuseColor="0.9 0.1 0.1"
+                emissiveColor="0.9 0.2 0.1"/>
+          </Appearance>
+          <Text string='"Hello X3D Authors !!"'>
+            <FontStyle size="3"/>
+          </Text>
+        </Shape>
+
+      </Transform>
+
+    </Transform>
+
+    <!-- ====================================================== -->
+    <!-- Mandatory event routing chain                          -->
+    <!-- ====================================================== -->
+    <ROUTE fromNode="ClickTriggerTouchSensor" fromField="touchTime"
+           toNode="OrbitalTimeInterval" toField="startTime"/>
+
+    <ROUTE fromNode="OrbitalTimeInterval" fromField="fraction_changed"
+           toNode="SpinThoseThings" toField="set_fraction"/>
+
+    <ROUTE fromNode="SpinThoseThings" fromField="value_changed"
+           toNode="EarthCoordinateSystem" toField="set_rotation"/>
+
+  </Scene>
+
+</X3D>

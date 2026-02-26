@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "https://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile="Interchange" version="3.3"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+     xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-3.3.xsd">
+
+  <Scene>
+
+    <!-- Viewpoint -->
+    <Viewpoint description="ColorPerVertex Examples"
+               position="0 0 6"/>
+
+    <!-- Background -->
+    <Background skyColor="0.1 0.1 0.1"
+                groundColor="0.1 0.1 0.1"/>
+
+    <!-- Shared Geometry Definitions -->
+    <Coordinate DEF="FourPoints"
+                point="0 0 0
+                       1 0 0
+                       1 1 0
+                       0 1 0"/>
+
+    <Color DEF="FourColors"
+           color="1 0 0
+                  0 1 0
+                  0 0 1
+                  0.8 0.8 0.8"/>
+
+    <!-- Example 1 – Default IndexedFaceSet -->
+    <Transform translation="-3 0 0">
+      <Shape>
+        <Appearance>
+          <Material diffuseColor="1 1 1"/>
+        </Appearance>
+        <IndexedFaceSet coordIndex="0 1 2 3 0 -1"
+                        colorIndex="0 1 2 3 0 -1"
+                        colorPerVertex="true"
+                        solid="true">
+          <Coordinate USE="FourPoints"/>
+          <Color USE="FourColors"/>
+        </IndexedFaceSet>
+      </Shape>
+    </Transform>
+
+    <!-- Example 2 – Face Color + Double-Sided -->
+    <Transform translation="-1 0 0">
+      <Shape>
+        <Appearance>
+          <Material diffuseColor="1 1 1"/>
+        </Appearance>
+        <IndexedFaceSet coordIndex="0 1 2 3 0 -1"
+                        colorIndex="2"
+                        colorPerVertex="false"
+                        solid="false">
+          <Coordinate USE="FourPoints"/>
+          <ColorRGBA DEF="FourColorsRGBA"
+                     color="1 0 0 1
+                            0 1 0 1
+                            0 0 1 0.5
+                            0.8 0.8 0.8 0"/>
+        </IndexedFaceSet>
+      </Shape>
+    </Transform>
+
+    <!-- Example 3 – IndexedLineSet Per-Vertex -->
+    <Transform translation="1 0 0">
+      <Shape>
+        <Appearance>
+          <Material emissiveColor="1 1 1"/>
+        </Appearance>
+        <IndexedLineSet coordIndex="0 1 2 3 0 -1"
+                        colorIndex="0 1 2 3 0 -1"
+                        colorPerVertex="true">
+          <Coordinate USE="FourPoints"/>
+          <Color USE="FourColors"/>
+        </IndexedLineSet>
+      </Shape>
+    </Transform>
+
+    <!-- Example 4 – IndexedLineSet Per-Polyline -->
+    <Transform translation="3 0 0">
+      <Shape>
+        <Appearance>
+          <Material emissiveColor="1 1 1"/>
+        </Appearance>
+        <IndexedLineSet coordIndex="0 1 2 3 0 -1"
+                        colorIndex="0"
+                        colorPerVertex="false">
+          <Coordinate USE="FourPoints"/>
+          <Color USE="FourColors"/>
+        </IndexedLineSet>
+      </Shape>
+    </Transform>
+
+  </Scene>
+</X3D>

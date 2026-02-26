@@ -4,3 +4,6 @@
     - X_ITE
 
 - 사용방법
+    ```python
+    python3 -m http.server
+    ```

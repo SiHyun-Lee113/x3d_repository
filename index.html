@@ -16,6 +16,7 @@
 
 <style>
   body { margin: 0; background: #111; color: #fff; font-family: sans-serif; }
+
   .topbar {
     display: flex;
     gap: 12px;
@@ -24,27 +25,45 @@
     border-bottom: 1px solid #333;
     font-size: 13px;
   }
+
   .topbar a {
     color: #9ad;
     cursor: pointer;
     text-decoration: none;
   }
+
   .topbar a:hover {
     text-decoration: underline;
   }
 
-  .container { display: flex; height: calc(100vh - 40px); }
-  .viewer { flex: 1; position: relative; }
-  .viewer + .viewer { border-left: 1px solid #333; }
+  .container {
+    display: flex;
+    height: calc(100vh - 40px);
+  }
+
+  .viewer {
+    flex: 1;
+    position: relative;
+  }
+
+  .viewer + .viewer {
+    border-left: 1px solid #333;
+  }
+
   .label {
     position: absolute;
-    top: 6px; left: 6px;
+    top: 6px;
+    left: 6px;
     z-index: 10;
     background: rgba(0,0,0,0.6);
     padding: 4px 8px;
     font-size: 12px;
   }
-  x3d, x3d-canvas { width: 100%; height: 100%; }
+
+  x3d-canvas {
+    width: 100%;
+    height: 100%;
+  }
 </style>
 </head>
 
@@ -53,42 +72,40 @@
 <!-- 🔝 파일 선택 바 -->
 <div class="topbar">
   <span>Scenes:</span>
-  <a onclick="loadScene('x3d_files/box.x3d')">box.x3d</a>
-  <a onclick="loadScene('x3d_files/colorInterpolatorExample.x3d')">animation.x3d</a>
-  <a onclick="loadScene('x3d_files/coordinateInterpolator2dExample.x3d')">coordinateInterpolator2dExample.x3d</a>
+  <a onclick="loadScene('260214')">260214.x3d</a>
+  <a onclick="loadScene('260221')">260221.x3d</a>
+  <a onclick="loadScene('260228')">260228.x3d</a>
 </div>
 
 <div class="container">
 
-  <!-- LEFT: X3DOM -->
+  <!-- LEFT: KR -->
   <div class="viewer">
-    <div class="label">X3DOM</div>
-    <x3d id="x3domViewer">
-      <scene>
-        <inline id="x3domInline" url="x3d_files/box.x3d"></inline>
-      </scene>
-    </x3d>
+    <div class="label">KR</div>
+    <x3d-canvas id="krViewer" src="x3d_files/box.x3d"></x3d-canvas>
   </div>
 
-  <!-- RIGHT: X_ITE -->
+  <!-- RIGHT: EN -->
   <div class="viewer">
-    <div class="label">X_ITE</div>
-    <x3d-canvas id="xiteViewer" src="x3d_files/box.x3d"></x3d-canvas>
+    <div class="label">EN</div>
+    <x3d-canvas id="enViewer" src="x3d_files/box.x3d"></x3d-canvas>
   </div>
 
 </div>
 
 <script>
-function loadScene(path) {
-  // X3DOM
-  const inlineNode = document.getElementById("x3domInline");
-  inlineNode.setAttribute("url", path);
+function loadScene(date) {
 
-  // X_ITE
-  const xite = document.getElementById("xiteViewer");
-  xite.setAttribute("src", path);
+  const basePath = "x3d_files/";
 
-  console.log("Loaded:", path);
+  const krPath = basePath + date + "_kr.x3d";
+  const enPath = basePath + date + "_en.x3d";
+
+  document.getElementById("krViewer").setAttribute("src", krPath);
+  document.getElementById("enViewer").setAttribute("src", enPath);
+
+  console.log("KR Loaded:", krPath);
+  console.log("EN Loaded:", enPath);
 }
 </script>
 

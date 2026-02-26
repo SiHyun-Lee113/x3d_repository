@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN"
+  "https://www.web3d.org/specifications/x3d-3.3.dtd">
+
+<X3D profile="Immersive" version="3.3"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+     xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-3.3.xsd">
+
+  <head>
+    <meta name="title" content="DirectionalYExpansionExtrusion.x3d"/>
+    <meta name="description"
+          content="Extrusion with Y-axis zigzag spine. CrossSection expands only toward +Y direction while -Y and X coordinates remain fixed. Animation plays only while touch is held."/>
+    <meta name="creator" content="ChatGPT"/>
+  </head>
+
+  <Scene>
+
+    <WorldInfo title="Directional +Y CrossSection Expansion"/>
+
+    <Background skyColor="0.05 0.07 0.1"/>
+
+    <!-- ================= Mandatory Viewpoint ================= -->
+    <Viewpoint
+      description="Front View"
+      position="0 0 20"/>
+
+    <!-- ================= Instruction Text (Mandatory & Visible) ================= -->
+
+    <Transform translation="0 6 0">
+      <Billboard axisOfRotation="0 0 0">
+        <Shape>
+          <Appearance>
+            <Material diffuseColor="1 1 1"
+                      emissiveColor="0.3 0.3 0.3"/>
+          </Appearance>
+          <Text string='"select &amp; hold shape" "to animate Extrusion"'>
+            <FontStyle justify='"MIDDLE" "MIDDLE"' size="0.6"/>
+          </Text>
+        </Shape>
+      </Billboard>
+    </Transform>
+
+    <!-- ================= Extrusion Geometry ================= -->
+
+    <Transform>
+      <Shape>
+        <Appearance>
+          <Material
+            diffuseColor="0.2 0.8 0.4"
+            emissiveColor="0.05 0.15 0.08"
+            specularColor="0.4 0.4 0.4"
+            shininess="0.4"/>
+        </Appearance>
+
+        <!--
+          Axis-aligned Y-direction zigzag spine
+          X constant, Y increasing, Z alternating
+          Coordinates used exactly as specified
+        -->
+        <Extrusion DEF="EXTRUSION_GEOMETRY"
+          spine="
+            0 -4 -2
+            0 -2  1
+            0  0  1
+            0  2  1
+            0  4 -2"
+          crossSection="
+           -1  0
+            1  0
+            1  1
+           -1  1
+           -1  0"/>
+      </Shape>
+
+      <TouchSensor DEF="TOUCH_SENSOR"
+                   description="Hold to expand +Y side"/>
+    </Transform>
+
+    <!-- ================= Animation ================= -->
+
+    <TimeSensor DEF="TIME_SENSOR"
+                cycleInterval="5"
+                loop="true"
+                enabled="false"/>
+
+    <!--
+      CoordinateInterpolator2D
+      - -Y side (y=0) remains fixed
+      - +Y side increases only
+      - X coordinates remain unchanged
+      - No symmetric or bidirectional expansion
+    -->
+    <CoordinateInterpolator2D DEF="CROSSSECTION_INTERPOLATOR"
+      key="0 0.5 1"
+      keyValue="
+       -1  0,  1  0,  1  1,  -1  1,  -1  0,
+       -1  0,  1  0,  1  2.0, -1  2.0, -1  0,
+       -1  0,  1  0,  1  1,  -1  1,  -1  0"/>
+
+    <!-- ================= Event Routing (Strict Order) ================= -->
+
+    <ROUTE fromNode="TOUCH_SENSOR" fromField="isActive"
+           toNode="TIME_SENSOR" toField="enabled"/>
+
+    <ROUTE fromNode="TOUCH_SENSOR" fromField="touchTime"
+           toNode="TIME_SENSOR" toField="startTime"/>
+
+    <ROUTE fromNode="TIME_SENSOR" fromField="fraction_changed"
+           toNode="CROSSSECTION_INTERPOLATOR" toField="set_fraction"/>
+
+    <ROUTE fromNode="CROSSSECTION_INTERPOLATOR" fromField="value_changed"
+           toNode="EXTRUSION_GEOMETRY" toField="set_crossSection"/>
+
+  </Scene>
+</X3D>
